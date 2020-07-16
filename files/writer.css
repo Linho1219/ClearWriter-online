@@ -930,7 +930,7 @@ table td {
 
 code,
 code * {
-  font-family: TERM, var(--mainfont) !important;
+  font-family: monospace, var(--mainfont) !important;
 }
 
 .linenums code {
@@ -1078,13 +1078,4 @@ button.off:before {
   left: 100%;
   top: 100%;
   opacity: 0;
-}
-
-#font-manager span {
-  font-family: TERM;
-  background-image: url(./flag.png);
-}
-
-#font-manager a {
-  font-family: BASE-W, BASE-E;
 }
