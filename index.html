@@ -789,7 +789,7 @@ Clear Writer 使用 GNU General Public License 3.0 进行许可。
       if (localStorage.maincolor) {
         document.getElementById("main_color_control").innerHTML =
           "* {--main:" + localStorage.maincolor + "}";
-      }
+      } else localStorage.maincolor = "#00BAFF";
 
       window.onload = function () {
         document.getElementById("preload").style.opacity = "0";
