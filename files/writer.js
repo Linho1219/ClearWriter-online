@@ -782,7 +782,7 @@ editor.on("change", paddingChanger);
 if (localStorage.maincolor) {
   if (localStorage.maincolor == "auto") {
     document.getElementById("main_color_control").innerHTML =
-      "* {--main:#" + systemPreferences.getAccentColor() + "}";
+      "* {--main:#00BAFF}";
   } else
     document.getElementById("main_color_control").innerHTML =
       "* {--main:" + localStorage.maincolor + "}";
