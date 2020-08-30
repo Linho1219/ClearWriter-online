@@ -427,7 +427,7 @@ CodeMirror-activeline-background {
 }
 
 .CodeMirror-vscrollbar:hover {
-  background: var(--darkback);
+  background: var(--vscrollbark);
 }
 @-moz-document url-prefix() {
   .CodeMirror-vscrollbar {
