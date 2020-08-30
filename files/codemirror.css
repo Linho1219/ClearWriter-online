@@ -9,11 +9,14 @@
 
 .CodeMirror textarea {
   outline: none !important;
+  border: none;
+  height: 35px !important;
+  line-height: 35px !important;
 }
 
 .CodeMirror-focused div.CodeMirror-selected {
   background: var(--selection);
-  transition: all 0.3s;
+  transition: background 0.3s;
 }
 
 .CodeMirror-selected {
@@ -33,7 +36,7 @@
 .CodeMirror pre.CodeMirror-line,
 .CodeMirror pre.CodeMirror-line-like {
   padding: 0; /* Horizontal padding of content */
-  transition: padding 0.3s;
+  transition: padding 0.3s, color 0.2s;
 }
 
 .CodeMirror-scrollbar-filler,
@@ -46,7 +49,7 @@
 /* GUTTER */
 
 .CodeMirror-gutters {
-  background-color: var(--darkback);
+  background-color: var(--vscrollbar);
   padding-right: 3px;
   border-right: 2px solid var(--line);
   box-shadow: var(--shadow) 0px 0px 20px;
@@ -60,7 +63,7 @@
   color: #999;
   float: right;
   white-space: nowrap;
-  font-family: TERM;
+  font-family: monospace;
 }
 
 .CodeMirror-guttermarker {
@@ -71,6 +74,27 @@
   color: #999;
 }
 
+@keyframes active-gutter {
+  from {
+    border-right: transparent solid 2px;
+    background: transparent;
+  }
+}
+
+.CodeMirror-activeline-gutter {
+  border-right: var(--main) solid 2px;
+  background: var(--com);
+  transform: translateX(-2px);
+  animation: active-gutter 0.3s;
+}
+
+.CodeMirror-activeline-gutter * {
+  color: var(--active);
+}
+
+.CodeMirror-activeline-gutter > * {
+  transform: translateX(2px);
+}
 /* CURSOR */
 
 .CodeMirror .CodeMirror-cursors {
@@ -84,14 +108,6 @@
   visibility: hidden;
   border-left: 2.7px solid var(--main);
   transition: all 0.13s cubic-bezier(0, 0.48, 0.27, 0.98);
-  animation: fade 0.3s;
-}
-
-.CodeMirror-overwrite .CodeMirror-cursor {
-  border-left: none;
-  border-bottom: 2.7px solid var(--main);
-  transform: translateY(-6px);
-  width: 12px;
 }
 
 .CodeMirror-focused .CodeMirror-cursor {
@@ -167,6 +183,10 @@
 
 /* Can style cursor different in overwrite (non-insert) mode */
 .CodeMirror-overwrite .CodeMirror-cursor {
+  border-left: none;
+  border-bottom: 2.7px solid var(--main);
+  transform: translateY(-6px);
+  width: 12px;
 }
 
 .cm-tab {
@@ -237,11 +257,7 @@
 }
 
 .cm-url {
-  color: rgba(72, 121, 189, 0.7);
-}
-
-.cm-strikethrough {
-  text-decoration: line-through;
+  color: rgba(72, 121, 189, 0.7) !important;
 }
 
 .cm-negative {
@@ -252,9 +268,13 @@
   color: #292;
 }
 
+.CodeMirror-activeline .cm-strikethrough {
+  text-decoration-color: var(--active);
+}
 .cm-strikethrough {
   text-decoration: line-through;
-  text-decoration-color: rgba(80, 80, 80, 0.7);
+  text-decoration-color: #999;
+  transition: text-decoration-color 0.2s;
 }
 
 .cm-header-1:nth-child(1) {
@@ -314,9 +334,9 @@
   opacity: 0.8;
 }
 
-.cm-s-default .cm-punctuation,
+/* .cm-s-default .cm-punctuation,
 .cm-s-default .cm-property {
-}
+} */
 
 .cm-s-default .cm-operator {
   color: #b4b4b4;
@@ -361,8 +381,7 @@
 }
 
 .CodeMirror-composing {
-  border-bottom: 2px solid;
-  font-family: var(--mainfont) !important;
+  border-bottom: 2px var(--active) solid;
 }
 
 .cm-comment,
@@ -385,18 +404,16 @@
 .cm-attribute,
 .cm-error,
 .cm-invalidchar,
-.CodeMirror-composing,
 .cm-string {
-  font-family: TERM, var(--mainfont);
+  font-family: monospace, var(--mainfont);
 }
 
-.CodeMirror-activeline {
-  color: var(--active);
-  transition: all 0.3s;
+.CodeMirror-activeline .CodeMirror-line {
+  transition: none;
 }
 
-CodeMirror-activeline-background {
-  background: var(--background);
+.CodeMirror-activeline .CodeMirror-line {
+  color: var(--active) !important;
 }
 
 .CodeMirror-lines {
@@ -405,9 +422,10 @@ CodeMirror-activeline-background {
 
 .cm-s-default .cm-error,
 .cm-invalidchar {
-  background: #e70000 !important;
   color: #fff !important;
   border-radius: 3px;
+  text-decoration: underline #e70000;
+  text-decoration-style: wavy;
 }
 
 .CodeMirror {
@@ -427,14 +445,9 @@ CodeMirror-activeline-background {
 }
 
 .CodeMirror-vscrollbar:hover {
-  background: var(--vscrollbark);
+  background: var(--vscrollbar);
 }
-@-moz-document url-prefix() {
-  .CodeMirror-vscrollbar {
-    background: var(--background) !important;
-    opacity: 0.5;
-  }
-}
+
 /* STOP */
 /* The rest of this file contains styles related to the mechanics of
    the editor. You probably shouldn't touch them. */
@@ -445,8 +458,7 @@ CodeMirror-activeline-background {
 }
 
 .CodeMirror-scroll {
-  overflow-y: scroll !important; /* Things will break if this is overridden */
-  overflow-x: hidden;
+  overflow: scroll !important; /* Things will break if this is overridden */
   /* 30px is the magic margin used to hide the element's real scrollbars */
   /* See overflow: hidden in .CodeMirror */
   margin-bottom: -30px;
@@ -503,7 +515,6 @@ CodeMirror-activeline-background {
   top: 0;
   min-height: 100%;
   z-index: 3;
-  animation: guttersFade 0.3s cubic-bezier(0, 0.6, 0.06, 0.99);
 }
 
 .CodeMirror-gutter {
@@ -583,8 +594,8 @@ CodeMirror-activeline-background {
   padding: 0.1px; /* Force widget margins to stay inside of the container */
 }
 
-.CodeMirror-widget {
-}
+/* .CodeMirror-widget {
+} */
 
 .CodeMirror-rtl pre {
   direction: rtl;
@@ -641,7 +652,7 @@ div.CodeMirror-dragcursors {
 }
 
 .cm-searching {
-  background-color: #ff0;
+  background-color: #ff05;
 }
 
 /* Used to force a border model for a node */
@@ -664,4 +675,8 @@ div.CodeMirror-dragcursors {
 /* Help users use markselection to safely style text background */
 span.CodeMirror-selectedtext {
   background: none;
+}
+
+.CodeMirror > div:nth-child(1) {
+  transform: translateY(25px);
 }

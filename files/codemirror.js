@@ -7,7 +7,7 @@
 // You can find some technical background for some of the code below
 // at http://marijnhaverbeke.nl/blog/#cm-internals .
 
-//P.S. this script was modified by Lin Hongping.
+//P.S. this script was modified by Henrylin666.
 
 (function (global, factory) {
   typeof exports === "object" && typeof module !== "undefined"
@@ -4916,10 +4916,14 @@
     display.cursorDiv.style.opacity = "";
     if (cm.options.cursorBlinkRate > 0) {
       display.blinker = setInterval(function () {
+        //MODIFY_START
         return (display.cursorDiv.style.opacity = (on = !on) ? "" : "0");
+        //MODIFY_END
       }, cm.options.cursorBlinkRate);
     } else if (cm.options.cursorBlinkRate < 0) {
+      //MODIFY_START
       display.cursorDiv.style.opacity = "0";
+      //MODIFY_END
     }
   }
 
@@ -10957,16 +10961,7 @@
     }
     var ch = String.fromCharCode(charCode == null ? keyCode : charCode);
     var cnt = 0;
-    if (document.querySelector(".cm-header-6") != null) cnt = 6;
-    else if (document.querySelector(".cm-header-5") != null) cnt = 5;
-    else if (document.querySelector(".cm-header-4") != null) cnt = 4;
-    else if (document.querySelector(".cm-header-3") != null) cnt = 3;
-    else if (document.querySelector(".cm-header-2") != null) cnt = 2;
-    else if (document.querySelector(".cm-header-1") != null) cnt = 1;
-    document.getElementById("padding_control").innerHTML =
-      ".CodeMirror pre.CodeMirror-line,CodeMirror pre.CodeMirror-line-like{padding-left:" +
-      ((cnt + 1) * 14.56 + 5.86 + 5) +
-      "px !important}";
+
     // Some browsers fire keypress events for backspace
     if (ch == "\x08") {
       return;
@@ -12473,7 +12468,7 @@
       "textarea",
       null,
       null,
-      "position: absolute; bottom: -1em; padding: 0; width: 1px; height: 1em; outline: none"
+      "position: absolute; top: 35px; padding: 0; width: 1px; height: 37px; outline: none"
     );
     var div = elt(
       "div",
@@ -14220,6 +14215,7 @@
     var cm = this.cm,
       display = cm.display;
     //removeChildrenAndAdd(display.cursorDiv, drawn.cursors);
+    //MODIFY_START
     if (
       display.cursorDiv.firstChild == null ||
       drawn.cursors.firstChild == null ||
@@ -14235,7 +14231,35 @@
           drawn.cursors.childNodes[i].style.top;
       }
     }
+    //MODIFY_END
     removeChildrenAndAdd(display.selectionDiv, drawn.selection);
+    //MODIFY_START
+    var maxWidth = document.querySelector(".CodeMirror-measure").offsetWidth-(WRITER?PADDING_WIDTH:0)-1;
+    var selectionTemp = document.querySelectorAll(".CodeMirror-selected");
+    var l = selectionTemp.length;
+    if (selectionTemp[0]) { 
+      if (selectionTemp[l - 1].offsetWidth >= maxWidth) {
+        var bigTop = selectionTemp[l - 1].style.top.replace("px", "") * 1;
+        var bigBottom = bigTop + selectionTemp[l - 1].offsetHeight;
+        for (var i = 1; i < l - 1; i++) {
+          var curTop = selectionTemp[i].style.top.replace("px", "") * 1;
+          var curBottom = curTop + selectionTemp[i].offsetHeight;
+          if (curTop >= bigTop && curBottom <= bigBottom)
+            selectionTemp[i].style.display = "none";
+        }
+      }
+      if(WRITER){
+        if (PADDING_WIDTH != "undefined")
+          for (var i = 0; i < l; i++) {
+            if (selectionTemp[i].style.left == "0px") {
+              selectionTemp[i].style.left = PADDING_WIDTH + "px";
+              selectionTemp[i].style.width =
+                selectionTemp[i].offsetWidth - PADDING_WIDTH + "px";
+            }
+          }
+      }
+    }
+    //MODIFY_END
     if (drawn.teTop != null) {
       this.wrapper.style.top = drawn.teTop + "px";
       this.wrapper.style.left = drawn.teLeft + "px";
